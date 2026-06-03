@@ -9,7 +9,11 @@ spec:
       kind: '*'
   description: Hello World App Project
   destinations:
-    - namespace: '*'
+    - namespace: 'hello-world-s2i'
+      server: '*'
+    - namespace: 'hello-world-deploy'
+      server: '*'
+    - namespace: 'hello-world-logging'
       server: '*'
   namespaceResourceBlacklist:
     - group: ''
