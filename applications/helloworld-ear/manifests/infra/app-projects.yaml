@@ -13,8 +13,6 @@ spec:
       server: '*'
     - namespace: 'hello-world-deploy'
       server: '*'
-    - namespace: 'hello-world-logging'
-      server: '*'
   namespaceResourceBlacklist:
     - group: ''
       kind: ResourceQuota
