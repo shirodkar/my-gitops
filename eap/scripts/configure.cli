@@ -1,0 +1,3 @@
+/subsystem=naming/binding="java:global/useSP365ArchitecturSite":add(binding-type=simple, value="true")
+/system-property=environment:add(value="dev")
+/system-property=javax.net.ssl.trustStore:add(value="/etc/secrets/keystore/keystore.jks")

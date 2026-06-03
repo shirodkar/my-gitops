@@ -1,0 +1,29 @@
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: my-clf
+  namespace: openshift-logging
+spec:
+  inputs:
+      - application:
+          includes:
+            - namespace: hello-world-deploy
+              container: app-inventory
+        name: app-inventory
+        type: application
+  outputs:
+    - name: rsyslog-server
+      type: syslog
+      syslog:
+        rfc: RFC5424
+        severity: informational
+        facility: local0
+        url: udp://headless.hello-world-logging.svc.cluster.local:514
+  pipelines:
+    - name: forward-app-inventory-logs
+      inputRefs:
+        - app-inventory
+      outputRefs:
+        - rsyslog-server
+  serviceAccount:
+      name: collector

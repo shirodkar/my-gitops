@@ -1,0 +1,30 @@
+apiVersion: wildfly.org/v1alpha1
+kind: WildFlyServer
+metadata:
+  name: app-inventory
+spec:
+  applicationImage: 'quay.io/rh_ee_sshirodk/eap8-app-inventory:latest'
+  replicas: 1
+  serviceAccountName: eap-service-account
+  env:
+    - name: SUBSYSTEM_LOGGING_ROOT_LOGGER_ROOT__LEVEL
+      value: INFO
+    - name: APP_LOG_DIR
+      value: /opt/eap/standalone/data/logs
+  envFrom:
+    - configMapRef:
+        name: postgres-config
+    - configMapRef:
+        name: keystore-config
+    - secretRef:
+        name: postgres-credentials
+    - secretRef:
+        name: keystore-credentials
+  secrets:
+    - keystore
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 1Gi

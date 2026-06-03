@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.9" name="com.example.helloworld.security">
+    <resources>
+        <resource-root path="custom-rolemapper.jar"/>
+    </resources>
+    <dependencies>
+        <module name="java.base"/>
+        <module name="java.logging"/>
+    </dependencies>
+</module>

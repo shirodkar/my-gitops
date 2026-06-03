@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-world-deploy
+  namespace: shared-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: hello-world-deploy
+  project: hello-world-app-project
+  source:
+    directory:
+      recurse: true
+    path: manifests/deploy
+    repoURL: 'https://github.com/shirodkar/helloworld-ear.git'
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      enabled: true
+      prune: true
+      selfHeal: true

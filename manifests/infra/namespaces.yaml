@@ -1,0 +1,24 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: hello-world-s2i
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: hello-world-deploy
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: external-secrets-operator
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: openshift-logging
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: hello-world-logging

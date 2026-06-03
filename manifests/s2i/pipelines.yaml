@@ -1,0 +1,93 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: eap8-helloworld-pipeline
+spec:
+  tasks:
+    - name: git-clone
+      params:
+        - name: CRT_FILENAME
+          value: ca-bundle.crt
+        - name: HTTP_PROXY
+          value: ''
+        - name: HTTPS_PROXY
+          value: ''
+        - name: NO_PROXY
+          value: ''
+        - name: SUBDIRECTORY
+          value: ''
+        - name: USER_HOME
+          value: /home/git
+        - name: DELETE_EXISTING
+          value: 'true'
+        - name: VERBOSE
+          value: 'false'
+        - name: SSL_VERIFY
+          value: 'true'
+        - name: URL
+          value: 'https://github.com/shirodkar/helloworld-ear.git'
+        - name: REVISION
+          value: main
+        - name: REFSPEC
+          value: ''
+        - name: SUBMODULES
+          value: 'true'
+        - name: DEPTH
+          value: '1'
+        - name: SPARSE_CHECKOUT_DIRECTORIES
+          value: ''
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: output
+          workspace: ws
+    - name: s2i-eap8-build-artifacts
+      params:
+        - name: IMAGE
+          value: quay.io/rh_ee_sshirodk/eap8-app-inventory-build-artifacts
+        - name: VERSION
+          value: latest
+        - name: IMAGE_SCRIPTS_URL
+          value: 'image:///usr/local/s2i'
+        - name: ENV_VARS
+          value:
+            - CUSTOM_INSTALL_DIRECTORIES=extensions
+            - ARTIFACT_DIR=ear/target
+            - POSTGRESQL_DRIVER_VERSION=42.7.11
+        - name: CONTEXT
+          value: .
+        - name: STORAGE_DRIVER
+          value: vfs
+        - name: FORMAT
+          value: oci
+        - name: BUILD_EXTRA_ARGS
+          value: ''
+        - name: PUSH_EXTRA_ARGS
+          value: ''
+        - name: SKIP_PUSH
+          value: 'false'
+        - name: TLS_VERIFY
+          value: 'true'
+        - name: VERBOSE
+          value: 'true'
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: s2i-eap8-build-artifacts
+      workspaces:
+        - name: source
+          workspace: ws
+        - name: dockerconfig
+          workspace: registry-credentials
+  workspaces:
+    - name: ws
+    - name: registry-credentials
+      optional: true

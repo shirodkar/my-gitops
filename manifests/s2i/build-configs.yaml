@@ -1,0 +1,81 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: eap8-app-inventory-build-artifacts
+spec:
+  output:
+    to:
+      kind: DockerImage
+      name: 'quay.io/rh_ee_sshirodk/eap8-app-inventory-build-artifacts:latest'
+    pushSecret:
+      name: quay-secret
+  successfulBuildsHistoryLimit: 1
+  failedBuildsHistoryLimit: 1
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest'
+      pullSecret:
+        name: my-pull-secret
+      env:
+        - name: CUSTOM_INSTALL_DIRECTORIES
+          value: extensions
+        - name: ARTIFACT_DIR
+          value: ear/target
+        - name: POSTGRESQL_DRIVER_VERSION
+          value: '42.7.11'
+      incremental: true
+      forcePull: true
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/shirodkar/helloworld-ear.git'
+  triggers:
+    - type: ConfigChange
+  runPolicy: Serial
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: eap8-app-inventory
+spec:
+  output:
+    to:
+      kind: DockerImage
+      name: 'quay.io/rh_ee_sshirodk/eap8-app-inventory:latest'
+    pushSecret:
+      name: quay-secret
+  successfulBuildsHistoryLimit: 1
+  failedBuildsHistoryLimit: 1
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8:latest'
+      pullSecret:
+        name: my-pull-secret
+  source:
+    type: Dockerfile
+    dockerfile: |-
+      FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8:latest
+      COPY --chown=jboss:root /server $JBOSS_HOME
+      RUN chmod -R ug+rwX $JBOSS_HOME
+    images:
+      - from:
+          kind: DockerImage
+          name: 'quay.io/rh_ee_sshirodk/eap8-app-inventory-build-artifacts:latest'
+        paths:
+          - sourcePath: /opt/server
+            destinationDir: .
+        pullSecret:
+          name: quay-secret
+  triggers:
+    - type: ImageChange
+      imageChange:
+        from:
+          kind: ImageStreamTag
+          name: 'eap8-app-inventory-build-artifacts:latest'
+  runPolicy: Serial
