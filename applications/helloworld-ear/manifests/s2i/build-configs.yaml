@@ -1,6 +1,36 @@
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
+  name: eap8-openjdk17-builder-custom
+spec:
+  output:
+    to:
+      kind: DockerImage
+      name: 'quay.io/rh_ee_sshirodk/eap8-openjdk17-builder-custom:latest'
+  successfulBuildsHistoryLimit: 1
+  failedBuildsHistoryLimit: 1
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest'
+      pullSecret:
+        name: quay-secret
+  source:
+    type: Dockerfile
+    dockerfile: |-
+      FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest
+      USER root
+      RUN microdnf install -y git && microdnf clean all
+      USER jboss
+  triggers:
+    - type: ConfigChange
+  runPolicy: Serial
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
   name: eap8-app-inventory-build-artifacts
 spec:
   output:
@@ -16,9 +46,9 @@ spec:
     sourceStrategy:
       from:
         kind: DockerImage
-        name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest'
+        name: 'quay.io/rh_ee_sshirodk/eap8-openjdk17-builder-custom:latest'
       pullSecret:
-        name: my-pull-secret
+        name: quay-secret
       env:
         - name: CUSTOM_INSTALL_DIRECTORIES
           value: extensions
