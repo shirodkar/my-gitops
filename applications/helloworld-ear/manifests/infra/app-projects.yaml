@@ -23,7 +23,7 @@ spec:
     - group: storage.k8s.io
       kind: '*'
   sourceRepos:
-    - 'https://github.com/shirodkar/helloworld-ear'
+    - 'https://github.com/shirodkar/my-gitops.git'
   roles:
     - description: Developer
       groups:
