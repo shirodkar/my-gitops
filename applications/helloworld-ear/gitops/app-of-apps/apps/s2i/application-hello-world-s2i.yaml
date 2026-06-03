@@ -13,7 +13,7 @@ spec:
   source:
     directory:
       recurse: true
-    path: manifests/s2i
+    path: applications/helloworld-ear/manifests/s2i
     repoURL: 'https://github.com/shirodkar/helloworld-ear.git'
     targetRevision: HEAD
   syncPolicy:
