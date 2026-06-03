@@ -14,7 +14,7 @@ spec:
     directory:
       recurse: true
     path: applications/helloworld-ear/manifests/s2i
-    repoURL: 'https://github.com/shirodkar/helloworld-ear.git'
+    repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:
     automated:
