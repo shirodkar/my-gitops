@@ -23,7 +23,7 @@ spec:
       FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest
       USER root
       RUN microdnf install -y git && microdnf clean all
-      USER jboss
+      USER 185
   triggers:
     - type: ConfigChange
   runPolicy: Serial
