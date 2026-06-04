@@ -13,7 +13,7 @@ spec:
   source:
     directory:
       recurse: true
-    path: devops/manifests/applications/helloworld-ear/deploy
+    path: manifests/applications/helloworld-ear/deploy
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:

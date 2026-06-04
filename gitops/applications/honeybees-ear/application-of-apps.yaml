@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: infra
+  name: honey-bees-app-of-apps
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/sync-wave: "0"
@@ -12,7 +12,7 @@ spec:
   source:
     directory:
       recurse: true
-    path: devops/manifests/infra
+    path: gitops/applications/honeybees-ear/apps
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:
@@ -20,7 +20,3 @@ spec:
       enabled: true
       prune: true
       selfHeal: true
-  ignoreDifferences:
-    - kind: ServiceAccount
-      jsonPointers:
-        - /imagePullSecrets
