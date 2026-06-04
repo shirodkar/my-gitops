@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: hello-world-app-project
+  name: shared-app-project
   namespace: shared-gitops
 spec:
   clusterResourceBlacklist:
@@ -12,6 +12,10 @@ spec:
     - namespace: 'hello-world-s2i'
       server: '*'
     - namespace: 'hello-world-deploy'
+      server: '*'
+    - namespace: 'honey-bees-s2i'
+      server: '*'
+    - namespace: 'honey-bees-deploy'
       server: '*'
   namespaceResourceBlacklist:
     - group: ''

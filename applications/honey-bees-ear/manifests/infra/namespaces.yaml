@@ -1,9 +1,0 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: honey-bees-s2i
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: honey-bees-deploy

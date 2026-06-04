@@ -1,19 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hello-world-deploy
-  namespace: shared-gitops
+  name: hello-world-app-of-apps
+  namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: hello-world-deploy
-  project: hello-world-app-project
+  project: default
   source:
     directory:
       recurse: true
-    path: applications/helloworld-ear/manifests/deploy
+    path: devops/gitops/applications/honeybees-ear/apps
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:

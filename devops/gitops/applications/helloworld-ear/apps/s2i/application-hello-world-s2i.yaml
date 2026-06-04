@@ -1,18 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hello-world-infra
-  namespace: openshift-gitops
+  name: hello-world-s2i
+  namespace: shared-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-  project: default
+    namespace: hello-world-s2i
+  project: shared-app-project
   source:
     directory:
       recurse: true
-    path: applications/helloworld-ear/manifests/infra
+    path: devops/manifests/applications/helloworld-ear/s2i
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:
@@ -20,7 +21,3 @@ spec:
       enabled: true
       prune: true
       selfHeal: true
-  ignoreDifferences:
-    - kind: ServiceAccount
-      jsonPointers:
-        - /imagePullSecrets

@@ -1,19 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hello-world-s2i
+  name: honey-bees-s2i
   namespace: shared-gitops
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: hello-world-s2i
-  project: hello-world-app-project
+    namespace: honey-bees-s2i
+  project: shared-app-project
   source:
     directory:
       recurse: true
-    path: applications/helloworld-ear/manifests/s2i
+    path: devops/manifests/applications/honeybees-ear/s2i
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:
