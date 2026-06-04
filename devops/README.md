@@ -7,7 +7,7 @@ Setup Infra:
 ```
 oc apply -f gitops/infra/application-infra.yaml
 oc patch console.operator.openshift.io cluster --type=json -p '[{"op":"add","path":"/spec/plugins/-","value":"gitops-plugin"}]'
-oc get projects --watch | grep hello-world-
+oc get projects --watch | grep hello-
 ```
 Add Secrets (optional - requires secrets manifests locally):
 ```

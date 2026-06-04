@@ -12,7 +12,7 @@ spec:
   source:
     directory:
       recurse: true
-    path: manifests/infra
+    path: devops/manifests/infra
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:
