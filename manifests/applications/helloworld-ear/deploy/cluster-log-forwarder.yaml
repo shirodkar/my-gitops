@@ -8,8 +8,8 @@ spec:
       - application:
           includes:
             - namespace: hello-world-deploy
-              container: app-inventory
-        name: app-inventory
+              container: hello-world
+        name: hello-world
         type: application
   outputs:
     - name: rsyslog-server
@@ -20,9 +20,9 @@ spec:
         facility: local0
         url: udp://headless.hello-world-logging.svc.cluster.local:514
   pipelines:
-    - name: forward-app-inventory-logs
+    - name: forward-hello-world-logs
       inputRefs:
-        - app-inventory
+        - hello-world
       outputRefs:
         - rsyslog-server
   serviceAccount:

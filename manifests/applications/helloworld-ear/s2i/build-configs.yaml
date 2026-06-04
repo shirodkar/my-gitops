@@ -31,12 +31,12 @@ spec:
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: eap8-app-inventory-build-artifacts
+  name: eap8-hello-world-build-artifacts
 spec:
   output:
     to:
       kind: DockerImage
-      name: 'quay.io/rh_ee_sshirodk/eap8-app-inventory-build-artifacts:latest'
+      name: 'quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts:latest'
     pushSecret:
       name: quay-secret
   successfulBuildsHistoryLimit: 1
@@ -69,12 +69,12 @@ spec:
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: eap8-app-inventory
+  name: eap8-hello-world
 spec:
   output:
     to:
       kind: DockerImage
-      name: 'quay.io/rh_ee_sshirodk/eap8-app-inventory:latest'
+      name: 'quay.io/rh_ee_sshirodk/eap8-hello-world:latest'
     pushSecret:
       name: quay-secret
   successfulBuildsHistoryLimit: 1
@@ -96,7 +96,7 @@ spec:
     images:
       - from:
           kind: DockerImage
-          name: 'quay.io/rh_ee_sshirodk/eap8-app-inventory-build-artifacts:latest'
+          name: 'quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts:latest'
         paths:
           - sourcePath: /opt/server
             destinationDir: .
@@ -107,5 +107,5 @@ spec:
       imageChange:
         from:
           kind: ImageStreamTag
-          name: 'eap8-app-inventory-build-artifacts:latest'
+          name: 'eap8-hello-world-build-artifacts:latest'
   runPolicy: Serial

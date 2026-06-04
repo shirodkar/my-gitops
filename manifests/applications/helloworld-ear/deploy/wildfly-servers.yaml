@@ -1,9 +1,9 @@
 apiVersion: wildfly.org/v1alpha1
 kind: WildFlyServer
 metadata:
-  name: app-inventory
+  name: hello-world
 spec:
-  applicationImage: 'quay.io/rh_ee_sshirodk/eap8-app-inventory:latest'
+  applicationImage: 'quay.io/rh_ee_sshirodk/eap8-hello-world:latest'
   replicas: 1
   serviceAccountName: eap-service-account
   env:

@@ -51,7 +51,7 @@ spec:
     - name: s2i-eap8-build-artifacts
       params:
         - name: IMAGE
-          value: quay.io/rh_ee_sshirodk/eap8-app-inventory-build-artifacts
+          value: quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts
         - name: VERSION
           value: latest
         - name: IMAGE_SCRIPTS_URL
