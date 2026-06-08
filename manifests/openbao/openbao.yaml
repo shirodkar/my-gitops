@@ -43,3 +43,17 @@ spec:
           serviceAccountRef:
             name: openbao-eso-auth
             namespace: openbao
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: openbao
+  namespace: openbao
+spec:
+  to:
+    kind: Service
+    name: openbao
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
