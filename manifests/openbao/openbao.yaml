@@ -4,6 +4,26 @@ metadata:
   name: openbao-eso-auth
   namespace: openbao
 ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-eso-to-openbao
+  namespace: external-secrets
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openbao
+      ports:
+        - protocol: TCP
+          port: 8200
+---
 # Post-deploy manual steps (run inside the OpenBao pod after init/unseal):
 #
 #   bao secrets enable -version=2 -path=secrets kv
@@ -23,6 +43,27 @@ metadata:
 #       bound_service_account_namespaces=openbao \
 #       policies=eso-policy \
 #       ttl=1h
+
+  #  0 bao operator init
+  #  1 oc exec -n openbao openbao-0 -- bao operator unseal I0MCP5sNCbJUguF3CJoHN/uZDSpSmRSI1HeX0lHsZ3u1
+  #  2 bao operator unseal I0MCP5sNCbJUguF3CJoHN/uZDSpSmRSI1HeX0lHsZ3u1
+  #  3 bao operator unseal 
+  #  4 sh -c 'export BAO_TOKEN=s.xlh4YnztRkykgCW9Y8lpmyGj
+  #  5 export BAO_TOKEN=s.xlh4YnztRkykgCW9Y8lpmyGj
+  #  6 bao secrets enable -version=2 -path=secrets kv
+  #  7 bao auth enable kubernetes
+  #  8 bao write auth/kubernetes/config kubernetes_host=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT 
+  #  9 bao policy write eso-policy - <<EOF
+  # 10 path "secrets/data/*" {
+  # 11   capabilities = ["read"]
+  # 12 }
+  # 13 path "secrets/metadata/*" {
+  # 14   capabilities = ["list"]
+  # 15 }
+  # 16 EOF
+  # 17 bao write auth/kubernetes/role/eso-role bound_service_account_names=openbao-eso-auth bound_service_account_namespaces=openbao policies=eso-policy ttl=1h
+
+
 apiVersion: external-secrets.io/v1
 kind: ClusterSecretStore
 metadata:
