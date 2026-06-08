@@ -71,7 +71,7 @@ spec:
   provider:
     vault:
       server: 'http://openbao.openbao.svc.cluster.local:8200'
-      path: secrets
+      path: kv
       version: v2
       auth:
         kubernetes:
