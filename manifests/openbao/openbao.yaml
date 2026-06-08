@@ -45,10 +45,7 @@ spec:
 #       ttl=1h
 
   #  0 bao operator init
-  #  1 oc exec -n openbao openbao-0 -- bao operator unseal I0MCP5sNCbJUguF3CJoHN/uZDSpSmRSI1HeX0lHsZ3u1
   #  2 bao operator unseal I0MCP5sNCbJUguF3CJoHN/uZDSpSmRSI1HeX0lHsZ3u1
-  #  3 bao operator unseal 
-  #  4 sh -c 'export BAO_TOKEN=s.xlh4YnztRkykgCW9Y8lpmyGj
   #  5 export BAO_TOKEN=s.xlh4YnztRkykgCW9Y8lpmyGj
   #  6 bao secrets enable -version=2 -path=secrets kv
   #  7 bao auth enable kubernetes
