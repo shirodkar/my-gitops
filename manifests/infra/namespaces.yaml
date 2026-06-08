@@ -32,3 +32,8 @@ kind: Namespace
 apiVersion: v1
 metadata:
   name: honey-bees-deploy
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: openbao
