@@ -20,15 +20,7 @@ oc apply -f gitops/infra/application-openbao.yaml
 oc exec -n openbao openbao-0 -- sh -c 'bao operator init -key-shares=1 -key-threshold=1'
 oc exec -n openbao openbao-0 -- sh -c 'bao operator unseal <unseal_key>'
 
-oc exec -n openbao openbao-0 -- sh -c 'export BAO_TOKEN=<root_token> && bao secrets enable -version=1 -path=kv kv && bao auth enable kubernetes && bao write auth/kubernetes/config kubernetes_host=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT && printf "path \"kv/*\" { capabilities = [\"read\",\"list\"] }" | bao policy write eso-policy - && bao write auth/kubernetes/role/eso-role bound_service_account_names=openbao-eso-auth bound_service_account_namespaces=openbao policies=eso-policy ttl=1h && bao write kv/secrets/hello-world/postgres POSTGRESQL_USER="postgres" POSTGRESQL_PASSWORD="postgres" && bao write kv/secrets/hello-world/keystore HTTPS_PASSWORD="password" && bao write kv/secrets/hello-world/quay .dockerconfigjson="{}" && bao write kv/secrets/hello-world/rh-pull-secret .dockerconfigjson="{}" && bao write kv/secrets/hello-world/keystore-file keystore.jks=""'
-```
-
-Add Secrets (optional - requires secrets manifests locally):
-```
-oc apply -f manifests/applications/helloworld-ear/s2i/secrets.yaml -n hello-world-s2i
-oc apply -f manifests/applications/helloworld-ear/deploy/secrets.yaml -n hello-world-deploy
-oc apply -f manifests/applications/honeybees-ear/s2i/secrets.yaml -n honey-bees-s2i
-oc apply -f manifests/applications/honeybees-ear/deploy/secrets.yaml -n honey-bees-deploy
+oc exec -n openbao openbao-0 -- sh -c 'export BAO_TOKEN=s.5mZJBb5ZijaPCCy7KTgmMp9V && bao secrets enable -version=1 -path=kv kv && bao auth enable kubernetes && bao write auth/kubernetes/config kubernetes_host=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT && printf "path \"kv/*\" { capabilities = [\"read\",\"list\"] }" | bao policy write eso-policy - && bao write auth/kubernetes/role/eso-role bound_service_account_names=openbao-eso-auth bound_service_account_namespaces=openbao policies=eso-policy ttl=1h && bao write kv/secrets/hello-world/postgres POSTGRESQL_USER="postgres" POSTGRESQL_PASSWORD="postgres" && bao write kv/secrets/hello-world/keystore HTTPS_PASSWORD="password" && bao write kv/secrets/hello-world/quay .dockerconfigjson="{}" && bao write kv/secrets/hello-world/rh-pull-secret .dockerconfigjson="{}" && bao write kv/secrets/hello-world/keystore-file keystore.jks=""'
 ```
 Deploy Apps
 ```
