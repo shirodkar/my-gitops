@@ -9,12 +9,46 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
   project: default
-  source:
-    directory:
-      recurse: true
-    path: manifests/infra
-    repoURL: 'https://github.com/shirodkar/my-gitops.git'
-    targetRevision: HEAD
+  sources:
+    - repoURL: 'https://github.com/shirodkar/my-gitops.git'
+      targetRevision: HEAD
+      directory:
+        recurse: true
+      path: manifests/infra
+    - chart: openbao
+      repoURL: 'https://openbao.github.io/openbao-helm'
+      targetRevision: 0.28.3
+      helm:
+        values: |
+          global:
+            openshift: true
+          injector:
+            enabled: false
+          server:
+            standalone:
+              enabled: true
+              config: |
+                ui = true
+                listener "tcp" {
+                  tls_disable = 1
+                  address = "[::]:8200"
+                  cluster_address = "[::]:8201"
+                }
+                storage "file" {
+                  path = "/openbao/data"
+                }
+            authDelegator:
+              enabled: true
+            dataStorage:
+              enabled: true
+              size: 1Gi
+          ui:
+            enabled: true
+    - repoURL: 'https://github.com/shirodkar/my-gitops.git'
+      targetRevision: HEAD
+      path: manifests/openbao
+      directory:
+        recurse: true
   syncPolicy:
     automated:
       enabled: true
