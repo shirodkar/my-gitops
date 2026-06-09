@@ -44,11 +44,6 @@ spec:
               size: 1Gi
           ui:
             enabled: true
-    - repoURL: 'https://github.com/shirodkar/my-gitops.git'
-      targetRevision: HEAD
-      path: manifests/openbao
-      directory:
-        recurse: true
   syncPolicy:
     automated:
       enabled: true
