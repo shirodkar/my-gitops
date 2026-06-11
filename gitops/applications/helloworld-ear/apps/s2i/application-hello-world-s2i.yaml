@@ -11,8 +11,6 @@ spec:
     namespace: hello-world-s2i
   project: shared-app-project
   source:
-    directory:
-      recurse: true
     path: manifests/kustomize/applications/helloworld-ear/s2i
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
