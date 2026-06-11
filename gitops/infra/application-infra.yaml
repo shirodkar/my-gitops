@@ -12,9 +12,7 @@ spec:
   source:
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
-    directory:
-      recurse: true
-    path: manifests/plain/infra
+    path: manifests/helm/infra
   syncPolicy:
     automated:
       enabled: true
