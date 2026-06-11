@@ -1,7 +1,5 @@
 kind: Kustomization
 resources:
-  - cluster-log-forwarder.yaml
-  - config-maps.yaml
   - external-secrets.yaml
   - service-accounts.yaml
   - wildfly-servers.yaml

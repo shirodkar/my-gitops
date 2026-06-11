@@ -1,9 +1,9 @@
 apiVersion: wildfly.org/v1alpha1
 kind: WildFlyServer
 metadata:
-  name: hello-world
+  name: wfs
 spec:
-  applicationImage: 'quay.io/rh_ee_sshirodk/eap8-hello-world:latest'
+  applicationImage: 'quay.io/path/to/eap:latest'
   replicas: 1
   serviceAccountName: eap-service-account
   env:
@@ -11,17 +11,6 @@ spec:
       value: INFO
     - name: APP_LOG_DIR
       value: /opt/eap/standalone/data/logs
-  envFrom:
-    - configMapRef:
-        name: postgres-config
-    - configMapRef:
-        name: keystore-config
-    - secretRef:
-        name: postgres-credentials
-    - secretRef:
-        name: keystore-credentials
-  secrets:
-    - keystore
   storage:
     volumeClaimTemplate:
       spec:

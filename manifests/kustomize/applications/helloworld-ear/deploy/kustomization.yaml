@@ -2,3 +2,30 @@ kind: Kustomization
 
 resources:
   - ../../base/deploy
+  - cluster-log-forwarder.yaml
+  - config-maps.yaml
+  - additional-external-secrets.yaml
+  - additional-service-accounts.yaml
+
+patches:
+  - patch: |-
+      apiVersion: wildfly.org/v1alpha1
+      kind: WildFlyServer
+      metadata:
+        name: wfs
+      spec:
+        applicationImage: 'quay.io/rh_ee_sshirodk/eap8-hello-world:latest'
+        envFrom:
+          - configMapRef:
+              name: postgres-config
+          - configMapRef:
+              name: keystore-config
+          - secretRef:
+              name: postgres-credentials
+          - secretRef:
+              name: keystore-credentials
+        secrets:
+          - keystore
+    target:
+      kind: WildFlyServer
+      name: wfs
