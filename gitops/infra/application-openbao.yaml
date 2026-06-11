@@ -42,7 +42,7 @@ spec:
             enabled: true
     - repoURL: 'https://github.com/shirodkar/my-gitops.git'
       targetRevision: HEAD
-      path: manifests/openbao
+      path: manifests/plain/openbao
       directory:
         recurse: true
   syncPolicy:
