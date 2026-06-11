@@ -1,12 +1,14 @@
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: eap8-openjdk17-builder-custom
+  name: custom-eap-builder-image
 spec:
   output:
     to:
       kind: DockerImage
-      name: 'quay.io/rh_ee_sshirodk/eap8-openjdk17-builder-custom:latest'
+      name: 'quay.io/path/to/custom-eap-builder-image:latest'
+    pushSecret:
+      name: quay-secret
   successfulBuildsHistoryLimit: 1
   failedBuildsHistoryLimit: 1
   strategy:
@@ -14,13 +16,13 @@ spec:
     dockerStrategy:
       from:
         kind: DockerImage
-        name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest'
+        name: 'registry.redhat.io/path/to/eap-builder-image:latest'
       pullSecret:
-        name: quay-secret
+        name: rh-pull-secret
   source:
     type: Dockerfile
     dockerfile: |-
-      FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8:latest
+      FROM registry.redhat.io/path/to/eap-builder-image:latest
       USER root
       RUN microdnf install -y git && microdnf clean all
       USER 185
@@ -31,12 +33,12 @@ spec:
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: eap8-hello-world-build-artifacts
+  name: eap-build-artifacts
 spec:
   output:
     to:
       kind: DockerImage
-      name: 'quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts:latest'
+      name: 'quay.io/path/to/eap-build-artifacts:latest'
     pushSecret:
       name: quay-secret
   successfulBuildsHistoryLimit: 1
@@ -46,22 +48,18 @@ spec:
     sourceStrategy:
       from:
         kind: DockerImage
-        name: 'quay.io/rh_ee_sshirodk/eap8-openjdk17-builder-custom:latest'
+        name: 'quay.io/path/to/custom-eap-builder-image:latest'
       pullSecret:
         name: quay-secret
       env:
         - name: CUSTOM_INSTALL_DIRECTORIES
           value: extensions
-        - name: ARTIFACT_DIR
-          value: ear/target
-        - name: POSTGRESQL_DRIVER_VERSION
-          value: '42.7.11'
       incremental: true
       forcePull: true
   source:
     type: Git
     git:
-      uri: 'https://github.com/shirodkar/helloworld-ear.git'
+      uri: 'git/url/to/source/repository.git'
   triggers:
     - type: ConfigChange
   runPolicy: Serial
@@ -69,12 +67,12 @@ spec:
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: eap8-hello-world
+  name: eap
 spec:
   output:
     to:
       kind: DockerImage
-      name: 'quay.io/rh_ee_sshirodk/eap8-hello-world:latest'
+      name: 'quay.io/path/to/eap:latest'
     pushSecret:
       name: quay-secret
   successfulBuildsHistoryLimit: 1
@@ -84,19 +82,19 @@ spec:
     dockerStrategy:
       from:
         kind: DockerImage
-        name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8:latest'
+        name: 'registry.redhat.io/path/to/eap-runtime-image:latest'
       pullSecret:
-        name: my-pull-secret
+        name: rh-pull-secret
   source:
     type: Dockerfile
     dockerfile: |-
-      FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8:latest
+      FROM registry.redhat.io/path/to/eap-runtime-image:latest
       COPY --chown=jboss:root /server $JBOSS_HOME
       RUN chmod -R ug+rwX $JBOSS_HOME
     images:
       - from:
           kind: DockerImage
-          name: 'quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts:latest'
+          name: 'quay.io/path/to/eap-build-artifacts:latest'
         paths:
           - sourcePath: /opt/server
             destinationDir: .

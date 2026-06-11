@@ -1,0 +1,78 @@
+kind: Kustomization
+
+resources:
+  - ../../base/s2i
+
+patches:
+  - patch: |-
+      kind: BuildConfig
+      apiVersion: build.openshift.io/v1
+      metadata:
+        name: custom-eap-builder-image
+      spec:
+        output:
+          to:
+            name: 'quay.io/rh_ee_sshirodk/eap8-openjdk17-builder-custom:latest'
+        strategy:
+          dockerStrategy:
+            from:
+              name: 'registry.redhat.io/path/to/eap-builder-image:latest'
+        source:
+          dockerfile: |-
+            FROM registry.redhat.io/path/to/eap-builder-image:latest
+            USER root
+            RUN microdnf install -y git && microdnf clean all
+            USER 185
+    target:
+      kind: BuildConfig
+      name: custom-eap-builder-image
+  - patch: |-
+      kind: BuildConfig
+      apiVersion: build.openshift.io/v1
+      metadata:
+        name: eap-build-artifacts
+      spec:
+        output:
+          to:
+            name: 'quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts:latest'
+        strategy:
+          sourceStrategy:
+            from:
+              name: 'quay.io/rh_ee_sshirodk/eap8-openjdk17-builder-custom:latest'
+            env:
+              - name: CUSTOM_INSTALL_DIRECTORIES
+                value: extensions
+              - name: ARTIFACT_DIR
+                value: ear/target
+              - name: POSTGRESQL_DRIVER_VERSION
+                value: '42.7.11'
+        source:
+          git:
+            uri: 'https://github.com/shirodkar/helloworld-ear.git'
+    target:
+      kind: BuildConfig
+      name: eap-build-artifacts
+  - patch: |-
+      kind: BuildConfig
+      apiVersion: build.openshift.io/v1
+      metadata:
+        name: eap
+      spec:
+        output:
+          to:
+            name: 'quay.io/rh_ee_sshirodk/eap8-hello-world:latest'
+        strategy:
+          dockerStrategy:
+            from:
+              name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8:latest'
+        source:
+          dockerfile: |-
+            FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8:latest
+            COPY --chown=jboss:root /server $JBOSS_HOME
+            RUN chmod -R ug+rwX $JBOSS_HOME
+          images:
+            - from:
+                name: 'quay.io/rh_ee_sshirodk/eap8-hello-world-build-artifacts:latest'
+    target:
+      kind: BuildConfig
+      name: eap

@@ -101,10 +101,4 @@ spec:
             destinationDir: .
         pullSecret:
           name: quay-secret
-  triggers:
-    - type: ImageChange
-      imageChange:
-        from:
-          kind: ImageStreamTag
-          name: 'eap8-honey-bees-build-artifacts:latest'
   runPolicy: Serial

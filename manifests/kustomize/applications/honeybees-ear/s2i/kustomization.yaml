@@ -1,0 +1,76 @@
+kind: Kustomization
+
+resources:
+  - ../../base/s2i
+
+patches:
+  - patch: |-
+      kind: BuildConfig
+      apiVersion: build.openshift.io/v1
+      metadata:
+        name: custom-eap-builder-image
+      spec:
+        output:
+          to:
+            name: 'quay.io/rh_ee_sshirodk/eap8-openjdk21-builder-custom:latest'
+        strategy:
+          dockerStrategy:
+            from:
+              name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk21-builder-openshift-rhel9:latest'
+        source:
+          dockerfile: |-
+            FROM registry.redhat.io/jboss-eap-8/eap8-openjdk21-builder-openshift-rhel9:latest
+            USER root
+            RUN microdnf install -y git && microdnf clean all
+            USER 185
+    target:
+      kind: BuildConfig
+      name: custom-eap-builder-image
+  - patch: |-
+      kind: BuildConfig
+      apiVersion: build.openshift.io/v1
+      metadata:
+        name: eap-build-artifacts
+      spec:
+        output:
+          to:
+            name: 'quay.io/rh_ee_sshirodk/eap8-honey-bees-build-artifacts:latest'
+        strategy:
+          sourceStrategy:
+            from:
+              name: 'quay.io/rh_ee_sshirodk/eap8-openjdk21-builder-custom:latest'
+            env:
+            - name: CUSTOM_INSTALL_DIRECTORIES
+              value: extensions
+            - name: MAVEN_S2I_ARTIFACT_DIRS
+              value: ear/target
+        source:
+          git:
+            uri: 'https://github.com/shirodkar/honey-bees-ear.git'
+    target:
+      kind: BuildConfig
+      name: eap-build-artifacts
+  - patch: |-
+      kind: BuildConfig
+      apiVersion: build.openshift.io/v1
+      metadata:
+        name: eap
+      spec:
+        output:
+          to:
+            name: 'quay.io/rh_ee_sshirodk/eap8-honey-bees:latest'
+        strategy:
+          dockerStrategy:
+            from:
+              name: 'registry.redhat.io/jboss-eap-8/eap8-openjdk21-runtime-openshift-rhel9:latest'
+        source:
+          dockerfile: |-
+            FROM registry.redhat.io/jboss-eap-8/eap8-openjdk21-runtime-openshift-rhel9:latest
+            COPY --chown=jboss:root /server $JBOSS_HOME
+            RUN chmod -R ug+rwX $JBOSS_HOME
+          images:
+            - from:
+                name: 'quay.io/rh_ee_sshirodk/eap8-honey-bees-build-artifacts:latest'
+    target:
+      kind: BuildConfig
+      name: eap
