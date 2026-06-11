@@ -11,9 +11,7 @@ spec:
     namespace: hello-world-deploy
   project: shared-app-project
   source:
-    directory:
-      recurse: true
-    path: manifests/applications/helloworld-ear/deploy
+    path: manifests/kustomize/applications/helloworld-ear/deploy
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:
