@@ -32,3 +32,5 @@ dependency-reduced-pom.xml
 .env
 .env.local
 secrets.yaml
+
+.DONTREADME.md
