@@ -13,7 +13,7 @@ spec:
   source:
     directory:
       recurse: true
-    path: manifests/applications/honeybees-ear/deploy
+    path: manifests/kustomize/applications/honeybees-ear/deploy
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
   syncPolicy:

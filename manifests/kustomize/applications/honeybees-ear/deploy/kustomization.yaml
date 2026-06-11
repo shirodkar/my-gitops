@@ -1,0 +1,16 @@
+kind: Kustomization
+
+resources:
+  - ../../base/deploy
+
+patches:
+  - patch: |-
+      apiVersion: wildfly.org/v1alpha1
+      kind: WildFlyServer
+      metadata:
+        name: wfs
+      spec:
+        applicationImage: 'quay.io/rh_ee_sshirodk/eap8-honey-bees:latest'
+    target:
+      kind: WildFlyServer
+      name: wfs
