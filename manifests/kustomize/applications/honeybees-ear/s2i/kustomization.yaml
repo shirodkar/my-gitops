@@ -70,7 +70,13 @@ patches:
             RUN chmod -R ug+rwX $JBOSS_HOME
           images:
             - from:
+                kind: DockerImage
                 name: 'quay.io/rh_ee_sshirodk/eap8-honey-bees-build-artifacts:latest'
+              paths:
+                - sourcePath: /opt/server
+                  destinationDir: .
+              pullSecret:
+                name: quay-secret
     target:
       kind: BuildConfig
       name: eap
