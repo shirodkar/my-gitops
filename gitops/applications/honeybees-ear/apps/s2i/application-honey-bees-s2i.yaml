@@ -11,8 +11,6 @@ spec:
     namespace: honey-bees-s2i
   project: shared-app-project
   source:
-    directory:
-      recurse: true
     path: manifests/kustomize/applications/honeybees-ear/s2i
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
