@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: shared-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
 ---
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
