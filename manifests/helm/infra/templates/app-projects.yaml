@@ -7,27 +7,17 @@ spec:
   clusterResourceBlacklist:
     - group: '*'
       kind: '*'
-  description: Hello World App Project
+  description: Shared App Project
   destinations:
-    - namespace: '*'
-      server: '*'
+    {{- toYaml .Values.appProjects.sharedAppProject.destinations | nindent 4 }}
   namespaceResourceBlacklist:
-    - group: ''
-      kind: ResourceQuota
-    - group: ''
-      kind: LimitRange
-    - group: operators.coreos.com
-      kind: '*'
-    - group: operator.openshift.io
-      kind: '*'
-    - group: storage.k8s.io
-      kind: '*'
+    {{- toYaml .Values.appProjects.sharedAppProject.namespaceResourceBlacklist | nindent 4 }}
   sourceRepos:
-    - '*'
+    {{- toYaml .Values.appProjects.sharedAppProject.sourceRepos | nindent 4 }}
   roles:
     - description: Developer
       groups:
-      - developers
+      {{- toYaml .Values.appProjects.sharedAppProject.roles.developerGroups | nindent 6 }}
       name: devops-admin
       policies:
       - p, proj:shared-app-project:devops-admin, applications, *, shared-app-project/*, allow
