@@ -12,11 +12,6 @@ kind: Namespace
 apiVersion: v1
 metadata:
   name: hello-world-logging
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: openbao
 {{- range .Values.namespaces }}
 ---
 kind: Namespace
