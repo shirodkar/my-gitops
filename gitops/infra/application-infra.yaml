@@ -13,6 +13,16 @@ spec:
     repoURL: 'https://github.com/shirodkar/my-gitops.git'
     targetRevision: HEAD
     path: manifests/helm/infra
+    helm:
+      parameters:
+        - name: namespaces[0]
+          value: hello-world-s2i
+        - name: namespaces[1]
+          value: hello-world-deploy
+        - name: namespaces[2]
+          value: honey-bees-s2i
+        - name: namespaces[3]
+          value: honey-bees-deploy
   syncPolicy:
     automated:
       enabled: true

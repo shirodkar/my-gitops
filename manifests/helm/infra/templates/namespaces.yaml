@@ -1,16 +1,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: hello-world-s2i
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: hello-world-deploy
----
-kind: Namespace
-apiVersion: v1
-metadata:
   name: external-secrets-operator
 ---
 kind: Namespace
@@ -26,14 +16,11 @@ metadata:
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: honey-bees-s2i
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: honey-bees-deploy
----
-kind: Namespace
-apiVersion: v1
-metadata:
   name: openbao
+{{- range .Values.namespaces }}
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ . }}
+{{- end }}
