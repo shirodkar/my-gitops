@@ -11,7 +11,7 @@ metadata:
   name: shared-gitops
   namespace: shared-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   server:
     enableRolloutsUI: true
@@ -211,7 +211,7 @@ metadata:
   name: openshift-gitops
   namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "0"
   finalizers:
     - argoproj.io/finalizer
 spec:
