@@ -22,13 +22,6 @@ metadata:
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: external-secrets-operator
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
----
-kind: Namespace
-apiVersion: v1
-metadata:
   name: openshift-gitops-operator
   annotations:
     argocd.argoproj.io/sync-wave: "0"
