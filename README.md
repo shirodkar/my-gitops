@@ -8,13 +8,13 @@ Install GitOps:
 oc apply -f gitops/install-gitops.yaml
 oc get pods -n openshift-gitops --watch
 ```
-Setup Infra:
+Setup Infra [uses Helm]:
 ```
 oc apply -f gitops/infra/application-infra.yaml
 oc patch console.operator.openshift.io cluster --type=json -p '[{"op":"add","path":"/spec/plugins/-","value":"gitops-plugin"}]'
 oc get projects --watch | grep hello-
 ```
-Add OpenBAO (and then manually add the secret values from the OpenBAO UI)
+Add OpenBAO (and then manually add the secret values from the OpenBAO UI) [uses Plain Manifests]
 ```
 oc apply -f gitops/infra/application-openbao.yaml
 oc get pods -n openbao --watch
@@ -25,7 +25,7 @@ oc exec -n openbao openbao-0 -- sh -c 'export BAO_TOKEN=<root_token> && bao secr
 
 oc get route -n openbao
 ```
-Deploy Apps
+Deploy Apps [uses Kustomize]
 ```
 oc apply -f gitops/applications/helloworld-ear/application-of-apps.yaml
 oc apply -f gitops/applications/honeybees-ear/application-of-apps.yaml
