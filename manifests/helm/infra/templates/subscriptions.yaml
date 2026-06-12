@@ -5,6 +5,8 @@ metadata:
     operators.coreos.com/eap.openshift-operators: ''
   name: eap
   namespace: openshift-operators
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   channel: stable
   installPlanApproval: Automatic
@@ -19,6 +21,8 @@ metadata:
     operators.coreos.com/openshift-external-secrets-operator.external-secrets-operator: ''
   name: openshift-external-secrets-operator
   namespace: external-secrets-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   channel: stable-v1
   installPlanApproval: Automatic
@@ -30,6 +34,8 @@ apiVersion: operator.openshift.io/v1alpha1
 kind: ExternalSecretsConfig
 metadata:
   name: cluster
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec: {}
 ---
 apiVersion: operators.coreos.com/v1alpha1
@@ -39,6 +45,8 @@ metadata:
     operators.coreos.com/cluster-logging.openshift-logging: ''
   name: cluster-logging
   namespace: openshift-logging
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   channel: stable-6.5
   installPlanApproval: Automatic
@@ -53,6 +61,8 @@ metadata:
     operators.coreos.com/openshift-pipelines-operator-rh.openshift-operators: ''
   name: openshift-pipelines-operator-rh
   namespace: openshift-operators
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   channel: latest
   installPlanApproval: Automatic
@@ -67,6 +77,8 @@ metadata:
     operators.coreos.com/openshift-gitops-operator.openshift-gitops-operator: ''
   name: openshift-gitops-operator
   namespace: openshift-gitops-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   channel: latest
   config:

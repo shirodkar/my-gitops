@@ -3,6 +3,8 @@ kind: AppProject
 metadata:
   name: shared-app-project
   namespace: shared-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   clusterResourceBlacklist:
     - group: '*'

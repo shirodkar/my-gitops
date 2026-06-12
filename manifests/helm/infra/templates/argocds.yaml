@@ -2,12 +2,16 @@ kind: Namespace
 apiVersion: v1
 metadata:
   name: shared-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 ---
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: shared-gitops
   namespace: shared-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   server:
     enableRolloutsUI: true
@@ -206,6 +210,8 @@ kind: ArgoCD
 metadata:
   name: openshift-gitops
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - argoproj.io/finalizer
 spec:
