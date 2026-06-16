@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: openshift-mta-og
+  namespace: openshift-mta
+spec:
+  targetNamespaces:
+    - openshift-mta
+  upgradeStrategy: Default
