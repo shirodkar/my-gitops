@@ -4,7 +4,7 @@ metadata:
   name: tackle
   namespace: openshift-mta
 spec:
-  feature_auth_required: 'false'
+  feature_auth_required: 'true'
   kai_llm_baseurl: 'https://maas-rhdp.apps.maas.redhatworkshops.io/v1'
   kai_llm_model: deepseek-r1-distill-qwen-14b
   kai_llm_provider: openai
