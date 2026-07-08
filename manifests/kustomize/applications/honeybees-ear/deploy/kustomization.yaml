@@ -11,6 +11,9 @@ patches:
         name: wfs
       spec:
         applicationImage: 'quay.io/rh_ee_sshirodk/eap8-honey-bees:latest'
+        env:
+          - name: HONEYBEES_API_URL
+            value: 'http://localhost:8080/api/api/bees'
     target:
       kind: WildFlyServer
       name: wfs
