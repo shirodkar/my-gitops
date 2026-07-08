@@ -47,7 +47,7 @@ patches:
         source:
           git:
             uri: 'https://github.com/shirodkar/honey-bees-ear.git'
-            ref: eap8.1
+            ref: eap7-to-eap8
     target:
       kind: BuildConfig
       name: eap-build-artifacts
