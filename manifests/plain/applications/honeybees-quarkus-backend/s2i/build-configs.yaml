@@ -1,0 +1,29 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: honey-bees-quarkus-backend
+spec:
+  output:
+    to:
+      kind: DockerImage
+      name: 'quay.io/rh_ee_sshirodk/honey-bees-quarkus-backend:latest'
+    pushSecret:
+      name: quay-secret
+  successfulBuildsHistoryLimit: 2
+  failedBuildsHistoryLimit: 2
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'java:openjdk-17-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/shirodkar/honey-bees-ear.git'
+      ref: quarkus-backend
+    contextDir: backend-api
+  triggers:
+    - type: ConfigChange
+  runPolicy: Serial
