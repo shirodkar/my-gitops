@@ -1,0 +1,29 @@
+embed-server --server-config=standalone-openshift.xml
+
+# Remove messaging subsystem (not needed, blocks startup waiting for shared-store lock)
+/subsystem=messaging-activemq:remove
+/socket-binding-group=standard-sockets/socket-binding=messaging:remove
+/socket-binding-group=standard-sockets/socket-binding=messaging-throughput:remove
+/extension=org.wildfly.extension.messaging-activemq:remove
+
+# Register PostgreSQL JDBC driver
+/subsystem=datasources/jdbc-driver=postgresql:add( \
+    driver-name=postgresql, \
+    driver-module-name=org.postgresql, \
+    driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
+
+# Create mammoth datasource
+data-source add \
+    --name=MammothDS \
+    --jndi-name=java:jboss/datasources/MammothDS \
+    --driver-name=postgresql \
+    --connection-url=jdbc:postgresql://localhost:5432/mammothdb \
+    --user-name=mammoth \
+    --password=mammoth \
+    --use-java-context=true \
+    --jta=true \
+    --min-pool-size=5 \
+    --max-pool-size=20 \
+    --enabled=true
+
+stop-embedded-server
