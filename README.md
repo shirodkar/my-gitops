@@ -1,7 +1,7 @@
 Login:
 ```
 UUID=xxxxx
-oc login -u admin https://api.cluster-$UUID.dynamic2.redhatworkshops.io:6443 
+oc login -u admin https://api.cluster-$UUID.dyn.redhatworkshops.io:6443
 ```
 Install GitOps:
 ```
@@ -35,4 +35,10 @@ Test Apps
 ```
 oc get route -n hello-world-deploy
 oc get route -n honey-bees-deploy
+```
+
+MTA
+```
+oc apply -f gitops/infra/application-mta.yaml 
+oc get pods -n openshift-mta -w
 ```
