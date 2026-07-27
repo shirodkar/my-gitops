@@ -45,28 +45,39 @@ oc get pods -n openshift-mta -w
 
 HUB="https://mta-openshift-mta.apps.$CLUSTER_URL_SUFFIX/hub"
 
-# Resolve tag ID by name
 EAP_TAG_ID=$(curl -sk "$HUB/tags" | jq '[.[] | select(.name=="EAP" and .category.name=="Runtime")][0].id')
+if [ "$EAP_TAG_ID" = "null" ] || [ -z "$EAP_TAG_ID" ]; then
+  echo "ERROR: EAP tag not found"; exit 1
+fi
+echo "EAP_TAG_ID=$EAP_TAG_ID"
 
-# 1. Create analysis profile (target IDs are stable across MTA installs)
 AP_ID=$(curl -sk -X POST "$HUB/analysis/profiles" \
   -H "Content-Type: application/json" \
-  -d '{
-    "name": "EAP7 to EAP8",
-    "mode": {"withDeps": true},
-    "scope": {"withKnownLibs": true, "packages": {"included": [], "excluded": []}},
-    "rules": {
-      "targets": [
-        {"id": 1, "selection": "konveyor.io/target=eap8"},
-        {"id": 6, "selection": "konveyor.io/target=openjdk17"},
-        {"id": 8},
-        {"id": 9}
-      ],
-      "labels": {"included": [], "excluded": []}
+  -d "$(cat <<'EOF'
+{
+  "name": "EAP7 to EAP8",
+  "mode": {"withDeps": true},
+  "scope": {"withKnownLibs": true, "packages": {"included": [], "excluded": []}},
+  "rules": {
+    "targets": [
+      {"id": 1, "selection": "konveyor.io/target=eap8"},
+      {"id": 6, "selection": "konveyor.io/target=openjdk17"},
+      {"id": 8},
+      {"id": 9}
+    ],
+    "labels": {"included": [], "excluded": []},
+    "repository": {
+      "kind": "git",
+      "url": "https://github.com/shirodkar/mammoth-ear.git",
+      "branch": "main",
+      "path": "/rules/"
     }
-  }' | jq '.id')
+  }
+}
+EOF
+)" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+echo "AP_ID=$AP_ID"
 
-# 2. Create application
 curl -sk -X POST "$HUB/applications" \
   -H "Content-Type: application/json" \
   -d "{
@@ -75,15 +86,14 @@ curl -sk -X POST "$HUB/applications" \
     \"tags\": [{\"id\": $EAP_TAG_ID}]
   }"
 
-# 3. Create archetype
 ARCH_ID=$(curl -sk -X POST "$HUB/archetypes" \
   -H "Content-Type: application/json" \
   -d "{
     \"name\": \"eap7\",
     \"criteria\": [{\"id\": $EAP_TAG_ID}]
   }" | jq '.id')
+echo "ARCH_ID=$ARCH_ID"
 
-# 4. Add profile via PUT
 curl -sk -X PUT "$HUB/archetypes/$ARCH_ID" \
   -H "Content-Type: application/json" \
   -d "{
