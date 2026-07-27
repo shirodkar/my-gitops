@@ -1,7 +1,8 @@
 Login:
 ```
 UUID=xxxxx
-oc login -u admin https://api.cluster-$UUID.dyn.redhatworkshops.io:6443
+CLUSTER_URL_SUFFIX=cluster-$UUID.dyn.redhatworkshops.io
+oc login -u admin https://api.$CLUSTER_URL_SUFFIX:6443
 ```
 Install GitOps:
 ```
@@ -41,4 +42,56 @@ MTA
 ```
 oc apply -f gitops/infra/application-mta.yaml 
 oc get pods -n openshift-mta -w
+
+HUB="https://mta-openshift-mta.apps.$CLUSTER_URL_SUFFIX/hub"
+
+# Resolve tag ID by name
+EAP_TAG_ID=$(curl -sk "$HUB/tags" | jq '[.[] | select(.name=="EAP" and .category.name=="Runtime")][0].id')
+
+# 1. Create analysis profile (target IDs are stable across MTA installs)
+AP_ID=$(curl -sk -X POST "$HUB/analysis/profiles" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "EAP7 to EAP8",
+    "mode": {"withDeps": true},
+    "scope": {"withKnownLibs": true, "packages": {"included": [], "excluded": []}},
+    "rules": {
+      "targets": [
+        {"id": 1, "selection": "konveyor.io/target=eap8"},
+        {"id": 6, "selection": "konveyor.io/target=openjdk17"},
+        {"id": 8},
+        {"id": 9}
+      ],
+      "labels": {"included": [], "excluded": []}
+    }
+  }' | jq '.id')
+
+# 2. Create application
+curl -sk -X POST "$HUB/applications" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"name\": \"Mammoth\",
+    \"repository\": {\"kind\": \"git\", \"url\": \"https://github.com/shirodkar/mammoth-ear.git\"},
+    \"tags\": [{\"id\": $EAP_TAG_ID}]
+  }"
+
+# 3. Create archetype
+ARCH_ID=$(curl -sk -X POST "$HUB/archetypes" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"name\": \"eap7\",
+    \"criteria\": [{\"id\": $EAP_TAG_ID}]
+  }" | jq '.id')
+
+# 4. Add profile via PUT
+curl -sk -X PUT "$HUB/archetypes/$ARCH_ID" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"name\": \"eap7\",
+    \"criteria\": [{\"id\": $EAP_TAG_ID}],
+    \"profiles\": [{
+      \"name\": \"eap8\",
+      \"analysisProfile\": {\"id\": $AP_ID}
+    }]
+  }"
 ```
