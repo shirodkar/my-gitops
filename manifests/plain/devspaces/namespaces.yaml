@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-devspaces
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openvsx
+  labels:
+    name: openvsx

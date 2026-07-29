@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: openshift-devspaces-og
+  namespace: openshift-devspaces
+spec:
+  targetNamespaces:
+    - openshift-devspaces

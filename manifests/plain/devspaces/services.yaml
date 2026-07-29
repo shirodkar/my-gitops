@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: openvsx
+spec:
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    deployment: postgresql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openvsx-server
+  namespace: openvsx
+spec:
+  ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+  selector:
+    deployment: openvsx-server
