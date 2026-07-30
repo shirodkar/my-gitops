@@ -19,6 +19,13 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 ---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: openshift-cnv
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+---
 {{- range .Values.namespaces }}
 ---
 kind: Namespace
