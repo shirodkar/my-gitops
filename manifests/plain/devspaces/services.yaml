@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: postgresql
   namespace: openvsx
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   ports:
     - name: "5432"
@@ -16,6 +18,8 @@ kind: Service
 metadata:
   name: openvsx-server
   namespace: openvsx
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   ports:
     - name: 8080-tcp

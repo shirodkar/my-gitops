@@ -5,6 +5,8 @@ metadata:
     operators.coreos.com/devspaces.openshift-devspaces: ''
   name: devspaces
   namespace: openshift-devspaces
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   channel: stable
   installPlanApproval: Automatic

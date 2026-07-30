@@ -3,6 +3,8 @@ kind: Route
 metadata:
   name: openvsx
   namespace: openvsx
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   to:
     kind: Service

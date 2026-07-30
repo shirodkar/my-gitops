@@ -5,6 +5,8 @@ metadata:
   namespace: openvsx
   labels:
     app: postgresql
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 1
   selector:
@@ -65,6 +67,8 @@ metadata:
   namespace: openvsx
   labels:
     app: openvsx-server
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 1
   selector:
@@ -128,6 +132,8 @@ metadata:
   namespace: openvsx
   labels:
     app: ovsx-cli
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 1
   selector:
