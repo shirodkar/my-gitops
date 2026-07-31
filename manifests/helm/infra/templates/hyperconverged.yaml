@@ -7,8 +7,6 @@ metadata:
   name: kubevirt-hyperconverged
   namespace: openshift-cnv
 spec:
-  developerConfiguration:
-    useEmulation: true
   enableCommonBootImageImport: true
   virtualMachineOptions:
     disableFreePageReporting: false

@@ -69,3 +69,7 @@ spec:
   name: kubevirt-hyperconverged
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  config:
+    env:
+      - name: KVM_EMULATION
+        value: "true"
