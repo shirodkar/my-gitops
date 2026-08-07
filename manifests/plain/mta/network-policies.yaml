@@ -6,7 +6,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: mta-hub
+      app.kubernetes.io/name: mta-ui
   ingress:
     - from:
         - namespaceSelector:
