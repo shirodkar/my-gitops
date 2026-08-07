@@ -25,6 +25,7 @@ spec:
         container:
           image: registry.redhat.io/devspaces/udi-rhel8:latest
           sourceMapping: /projects
+    maxNumberOfRunningWorkspacesPerUser: -1
     storage:
       pvcStrategy: per-user
   gitServices: {}
