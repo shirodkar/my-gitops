@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mta-allow-devspaces
+  namespace: openshift-mta
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: mta-hub
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: che.eclipse.org
+      ports:
+        - protocol: TCP
+          port: 8080
+  policyTypes:
+    - Ingress
