@@ -23,6 +23,7 @@ spec:
     defaultComponents:
       - name: dev
         container:
+          image: registry.redhat.io/devspaces/udi-rhel8:latest
           sourceMapping: /projects
     storage:
       pvcStrategy: per-user
