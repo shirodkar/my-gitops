@@ -25,8 +25,11 @@ spec:
         container:
           image: registry.redhat.io/devspaces/udi-rhel8:latest
           sourceMapping: /projects
+          env:
+            - name: MAVEN_OPTS
+              value: '-Dmaven.repo.local=/projects/.m2/repository'
     maxNumberOfRunningWorkspacesPerUser: -1
     storage:
-      pvcStrategy: per-user
+      pvcStrategy: per-workspace
   gitServices: {}
   networking: {}
