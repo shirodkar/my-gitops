@@ -1,9 +1,6 @@
 Login:
-```
-UUID=xxxxx
-CLUSTER_URL_SUFFIX=cluster-$UUID.dyn.redhatworkshops.io
-oc login -u admin https://api.$CLUSTER_URL_SUFFIX:6443
-```
+Log in to OpenShift as a cluster admin.
+
 Install GitOps:
 ```
 oc apply -f gitops/install-gitops.yaml
@@ -43,6 +40,7 @@ MTA
 oc apply -f gitops/infra/application-mta.yaml 
 oc get pods -n openshift-mta -w
 
+CLUSTER_URL_SUFFIX=oc whoami -c | sed -E 's|[^/]+/api-([^:]+):[0-9]+/.*|\1|'
 HUB="https://mta-openshift-mta.apps.$CLUSTER_URL_SUFFIX/hub"
 
 EAP_TAG_ID=$(curl -sk "$HUB/tags" | jq '[.[] | select(.name=="EAP" and .category.name=="Runtime")][0].id')
@@ -105,3 +103,8 @@ curl -sk -X PUT "$HUB/archetypes/$ARCH_ID" \
     }]
   }"
 ```
+
+Dev Spaces
+```
+oc apply -f gitops/infra/application-devspaces.yaml 
+oc get pods -n openshift-devspaces -w
