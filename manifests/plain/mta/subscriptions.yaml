@@ -5,6 +5,8 @@ metadata:
     operators.coreos.com/mta-operator.openshift-mta: ''
   name: mta-operator
   namespace: openshift-mta
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   channel: stable-v8.1
   installPlanApproval: Automatic

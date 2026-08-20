@@ -3,6 +3,8 @@ kind: Tackle
 metadata:
   name: tackle
   namespace: openshift-mta
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   feature_auth_required: 'false'
   kai_llm_baseurl: 'https://maas-rhdp.apps.maas.redhatworkshops.io/v1'
