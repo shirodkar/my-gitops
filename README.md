@@ -10,7 +10,7 @@ Setup Infra [uses Helm]:
 ```
 oc apply -f gitops/infra/application-infra.yaml
 oc patch console.operator.openshift.io cluster --type=json -p '[{"op":"add","path":"/spec/plugins/-","value":"gitops-plugin"}]'
-oc get projects --watch | grep hello-
+watch oc get applications -n openshift-gitops
 ```
 Add OpenBAO (and then manually add the secret values from the OpenBAO UI) [uses Plain Manifests]
 ```
