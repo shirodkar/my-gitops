@@ -44,6 +44,11 @@ oc get pods -n openshift-mta -w
 ```
 Add the Mammoth Application to MTA
 ```
++-----------+      +---------+       +----------------+
+|Application|──────|Archetype|───────|Analysis Profile|
++-----------+      +---------+       +----------------+
+```
+```
 CLUSTER_URL_SUFFIX=$(oc whoami -c | sed -E 's|[^/]+/api-([^:]+):[0-9]+/.*|\1|')
 HUB="https://mta-openshift-mta.apps.$CLUSTER_URL_SUFFIX/hub"
 
