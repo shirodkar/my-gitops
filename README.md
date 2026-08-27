@@ -10,7 +10,7 @@ Setup Infra [uses Helm]:
 ```
 oc apply -f gitops/infra/application-infra.yaml
 oc patch console.operator.openshift.io cluster --type=json -p '[{"op":"add","path":"/spec/plugins/-","value":"gitops-plugin"}]'
-watch oc get applications -n openshift-gitops
+oc get applications -n openshift-gitops -w
 ```
 Add OpenBAO (and then manually add the secret values from the OpenBAO UI) [uses Plain Manifests]
 ```
@@ -40,7 +40,7 @@ MTA
 oc apply -f gitops/infra/application-mta.yaml 
 oc get pods -n openshift-mta -w
 
-CLUSTER_URL_SUFFIX=oc whoami -c | sed -E 's|[^/]+/api-([^:]+):[0-9]+/.*|\1|'
+CLUSTER_URL_SUFFIX=$(oc whoami -c | sed -E 's|[^/]+/api-([^:]+):[0-9]+/.*|\1|')
 HUB="https://mta-openshift-mta.apps.$CLUSTER_URL_SUFFIX/hub"
 
 EAP_TAG_ID=$(curl -sk "$HUB/tags" | jq '[.[] | select(.name=="EAP" and .category.name=="Runtime")][0].id')
@@ -73,7 +73,7 @@ AP_ID=$(curl -sk -X POST "$HUB/analysis/profiles" \
   }
 }
 EOF
-)" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+)" | jq -r '.id')
 echo "AP_ID=$AP_ID"
 
 curl -sk -X POST "$HUB/applications" \
