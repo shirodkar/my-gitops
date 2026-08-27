@@ -18,7 +18,9 @@ oc apply -f gitops/infra/application-openbao.yaml
 oc get pods -n openbao --watch
 oc exec -n openbao openbao-0 -- sh -c 'bao operator init -key-shares=1 -key-threshold=1'
 oc exec -n openbao openbao-0 -- sh -c 'bao operator unseal <unseal_key>'
-
+```
+Add any additional secrets to this command or add them via the OpenBAO UI console.
+```
 oc exec -n openbao openbao-0 -- sh -c 'export BAO_TOKEN=<root_token> && bao secrets enable -version=1 -path=kv kv && bao auth enable kubernetes && bao write auth/kubernetes/config kubernetes_host=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT && printf "path \"kv/*\" { capabilities = [\"read\",\"list\"] }" | bao policy write eso-policy - && bao write auth/kubernetes/role/eso-role bound_service_account_names=openbao-eso-auth bound_service_account_namespaces=openbao policies=eso-policy ttl=1h && bao write kv/secrets/hello-world/postgres POSTGRESQL_USER="postgres" POSTGRESQL_PASSWORD="postgres" && bao write kv/secrets/hello-world/keystore HTTPS_PASSWORD="password" && bao write kv/secrets/hello-world/quay .dockerconfigjson="{}" && bao write kv/secrets/hello-world/rh-pull-secret .dockerconfigjson="{}" && bao write kv/secrets/hello-world/keystore-file keystore.jks=""'
 
 oc get route -n openbao
@@ -39,7 +41,9 @@ MTA
 ```
 oc apply -f gitops/infra/application-mta.yaml 
 oc get pods -n openshift-mta -w
-
+```
+Add the Mammoth Application to MTA
+```
 CLUSTER_URL_SUFFIX=$(oc whoami -c | sed -E 's|[^/]+/api-([^:]+):[0-9]+/.*|\1|')
 HUB="https://mta-openshift-mta.apps.$CLUSTER_URL_SUFFIX/hub"
 
@@ -108,3 +112,4 @@ Dev Spaces
 ```
 oc apply -f gitops/infra/application-devspaces.yaml 
 oc get pods -n openshift-devspaces -w
+```
